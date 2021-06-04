@@ -1,49 +1,56 @@
-cmake_minimum_required(VERSION 3.12.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12...3.14)
 
-set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo Release MinSizeRel)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PlasmaEditor)
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-find_program(PLASMA_IWYU_PATH NAMES include-what-you-use iwyu)
-if(PLASMA_IWYU_PATH)
-  message(STATUS "Found iwyu at ${PLASMA_IWYU_PATH}")
+if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+	message(FATAL_ERROR "In-source builds are not supported. Please choose a different binary directory.")
+	return()
 endif()
 
-find_program(PLASMA_CCACHE_PATH ccache)
-if(PLASMA_CCACHE_PATH)
-  message(STATUS "Found ccache at ${PLASMA_CCACHE_PATH}")
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${PLASMA_CCACHE_PATH}")
-endif()
-
-project(Plasma)
-
+set(PLASMA_CMAKE_UTILS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/BuildSystem/CMake" CACHE INTERNAL "The path where Plasma stores CMake utility functions.")
 set(PLASMA_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(PLASMA_CMAKE_DIR ${PLASMA_CORE_DIR}/CMakeFiles/)
 set(PLASMA_TOOLCHAIN_DIR ${PLASMA_CMAKE_DIR}/Toolchain/)
 set(PLASMA_TARGETOS_DIR ${PLASMA_CMAKE_DIR}/TargetOs/)
 set(PLASMA_LIBRARIES_DIR ${PLASMA_CORE_DIR}/Source/)
 set(PLASMA_PLATFORM_DATA_DIR ${PLASMA_CORE_DIR}/PlatformData/${PLASMA_TOOLCHAIN})
 
-include(${PLASMA_CMAKE_DIR}/PlasmaGit.cmake)
-include(${PLASMA_CMAKE_DIR}/PlasmaVersion.cmake)
-include(${PLASMA_CMAKE_DIR}/PlasmaPlatform.cmake)
+# Required to find cmake modules like 'FindDirectX.cmake'
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PLASMA_CMAKE_UTILS_PATH})
 
+include("PlasmaUtils")
+
+
+
+file(RELATIVE_PATH PLASMA_SUBMODULE_PREFIX_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+set_property(GLOBAL PROPERTY PLASMA_SUBMODULE_PREFIX_PATH ${PLASMA_SUBMODULE_PREFIX_PATH})
+if(PLASMA_SUBMODULE_PREFIX_PATH STREQUAL "")
+	set(PLASMA_SUBMODULE_MODE FALSE)
+else()
+	set(PLASMA_SUBMODULE_MODE TRUE)
+endif()
+set_property(GLOBAL PROPERTY PLASMA_SUBMODULE_MODE ${PLASMA_SUBMODULE_MODE})
+
+PlasmaBuildFilterInit()
+
+PlasmaDetectProjectName(DETECTED_NAME)
+
+if(NOT PLASMA_SUBMODULE_MODE)
+	PlasmaDetectLanguages()
+
+	set (PLASMA_SOLUTION_NAME ${DETECTED_NAME} CACHE STRING "The name of the solution")
+	project (${PLASMA_SOLUTION_NAME}
+		VERSION 1.0
+		DESCRIPTION "An open-source game engine"
+		HOMEPAGE_URL "https://plasmagameengine.com/"
+		LANGUAGES ${PLASMA_LANGUAGES})
+endif()
+
+PlasmaCheckBuildType()
+PlasmaWriteConfigurationTxt()
+PlasmaInitProjects()
 
 add_definitions(-DPlasmaConfigName="${PLASMA_CONFIG}")
 add_definitions(-DPlasmaArchitectureName="x64")
 
-
-include(${PLASMA_CMAKE_DIR}/PlasmaFunctions.cmake)
- 
-
-include(${PLASMA_TOOLCHAIN_DIR}/${CMAKE_CXX_COMPILER_ID}.cmake)
-include(${PLASMA_TARGETOS_DIR}/${CMAKE_SYSTEM_NAME}.cmake)
-
-include(${PLASMA_CMAKE_DIR}/CMakeFlags.cmake)
-
-add_subdirectory(Source/Platform/${PLASMA_PLATFORM})
+add_subdirectory(Source/Platform/${CMAKE_SYSTEM_NAME})
 
 add_subdirectory(External)
 add_subdirectory(Source)

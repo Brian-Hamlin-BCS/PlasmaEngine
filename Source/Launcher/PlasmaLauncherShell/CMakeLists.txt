@@ -1,17 +1,10 @@
-add_executable(PlasmaLauncherShell)
+PlasmaCmakeInit()
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-plasma_setup_library(PlasmaLauncherShell ${CMAKE_CURRENT_LIST_DIR} TRUE)
-plasma_use_precompiled_header(PlasmaLauncherShell ${CMAKE_CURRENT_LIST_DIR})
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-target_sources(PlasmaLauncherShell
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/VirtualFileSystem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-)
-
-target_link_libraries(PlasmaLauncherShell
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     Common
     Platform
@@ -19,8 +12,8 @@ target_link_libraries(PlasmaLauncherShell
     Support
 )
 
-add_dependencies(PlasmaLauncherShell
+add_dependencies(${PROJECT_NAME}
   PlasmaLauncher
 )
 
-plasma_copy_from_linked_libraries(PlasmaLauncherShell)
+#plasma_copy_from_linked_libraries(PlasmaLauncherShell)

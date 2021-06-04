@@ -1,21 +1,10 @@
-add_library(RendererGL)
+PlasmaCmakeInit()
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-plasma_setup_library(RendererGL ${CMAKE_CURRENT_LIST_DIR} TRUE)
-plasma_use_precompiled_header(RendererGL ${CMAKE_CURRENT_LIST_DIR})
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-target_sources(RendererGL
-  PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.cpp
-      ${CMAKE_CURRENT_LIST_DIR}/OpenglRenderer.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-      ${CMAKE_CURRENT_LIST_DIR}/RendererGLStandard.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/RendererGLStandard.cpp  
-      ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererWindows.cpp
-      ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererSDL.cpp
-)
-
-plasma_target_includes(RendererGL
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     Common
     Support

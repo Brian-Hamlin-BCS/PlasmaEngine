@@ -1,21 +1,10 @@
-add_executable(PlasmaEditor)
+PlasmaCmakeInit()
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-plasma_setup_library(PlasmaEditor ${CMAKE_CURRENT_LIST_DIR} TRUE)
-plasma_use_precompiled_header(PlasmaEditor ${CMAKE_CURRENT_LIST_DIR})
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-target_sources(PlasmaEditor
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/GameOrEditorStartup.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/GameOrEditorStartup.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/PlasmaCrashCallbacks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/PlasmaCrashCallbacks.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/RC/PlasmaEditor.rc
-)
-
-target_link_libraries(PlasmaEditor
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     assimp
     CodeTranslator
@@ -57,4 +46,4 @@ target_link_libraries(PlasmaEditor
 
 target_compile_definitions(PlasmaEditor PUBLIC TRACY_IMPORTS)
 
-plasma_copy_from_linked_libraries(PlasmaEditor)
+#plasma_copy_from_linked_libraries(PlasmaEditor)

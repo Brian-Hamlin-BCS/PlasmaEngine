@@ -1,44 +1,12 @@
-add_library(SpirvCross)
+PlasmaCmakeInit()
 
-plasma_setup_library(SpirvCross ${CMAKE_CURRENT_LIST_DIR} FALSE)
-plasma_use_precompiled_header(SpirvCross ${CMAKE_CURRENT_LIST_DIR})
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-target_sources(SpirvCross
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/GLSL.std.450.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/barrier.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/external_interface.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/thread_group.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cfg.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cfg.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_common.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cpp.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cpp.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_parsed_ir.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_parsed_ir.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_util.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_util.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_glsl.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_glsl.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_hlsl.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_hlsl.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_msl.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_msl.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_parser.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_parser.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_reflect.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_reflect.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-)
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-target_include_directories(SpirvCross
+target_include_directories(${PROJECT_NAME}
   PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/Repo/
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
 )
-
-set_target_properties( SpirvCross PROPERTIES FOLDER "External/SpirvCross" )

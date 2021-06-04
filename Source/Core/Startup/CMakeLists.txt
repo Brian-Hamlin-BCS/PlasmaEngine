@@ -1,18 +1,10 @@
-add_library(Startup)
+PlasmaCmakeInit()
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-plasma_setup_library(Startup ${CMAKE_CURRENT_LIST_DIR} TRUE)
-plasma_use_precompiled_header(Startup ${CMAKE_CURRENT_LIST_DIR})
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-target_sources(Startup
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Startup.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Startup.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StartupStandard.hpp
-)
-
-plasma_target_includes(Startup
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     Common
     Geometry

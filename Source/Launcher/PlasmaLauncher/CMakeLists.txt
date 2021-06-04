@@ -1,58 +1,10 @@
-add_executable(PlasmaLauncher)
+PlasmaCmakeInit()
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-plasma_setup_library(PlasmaLauncher ${CMAKE_CURRENT_LIST_DIR} TRUE)
-plasma_use_precompiled_header(PlasmaLauncher ${CMAKE_CURRENT_LIST_DIR})
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-target_sources(PlasmaLauncher
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildsMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildsMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildStatus.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildStatus.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/DeveloperNotes.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DeveloperNotes.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DiscoverMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ExtraModals.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ForwardDeclarations.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Launcher.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Launcher.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherComponents.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherComponents.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherCrashCallbacks.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherStandard.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherStandard.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherStartup.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherTasks.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherTasks.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherWindow.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LauncherWindow.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Main.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/NewProjectMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/NewProjectMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ProjectCache.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ProjectCache.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/RecentProjectsMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/RecentProjectsMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SettingsMenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SettingsMenu.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Standalone.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Standalone.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/TagFiltering.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/VersionSelector.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/VersionSelector.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/RC/PlasmaLauncher.rc
-)
-
-target_link_libraries(PlasmaLauncher
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     assimp
     CodeTranslator
@@ -92,6 +44,6 @@ target_link_libraries(PlasmaLauncher
     tracy
 )
 
-target_compile_definitions(PlasmaLauncher PUBLIC TRACY_IMPORTS)
+target_compile_definitions(${PROJECT_NAME} PUBLIC TRACY_IMPORTS)
 
-plasma_copy_from_linked_libraries(PlasmaLauncher)
+#plasma_copy_from_linked_libraries(PlasmaLauncher)

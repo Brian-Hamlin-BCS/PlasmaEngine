@@ -14,7 +14,7 @@ namespace Plasma
 	class Camera : public Component
 	{
 	public:
-	LightningDeclareType(Camera, TypeCopyMode::ReferenceType);
+		LightningDeclareType(Camera, TypeCopyMode::ReferenceType);
 
 		// Component Interface
 

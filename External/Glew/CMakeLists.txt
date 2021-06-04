@@ -1,20 +1,20 @@
-add_library(Glew)
+PlasmaCmakeInit()
 
-plasma_setup_library(Glew ${CMAKE_CURRENT_LIST_DIR} FALSE)
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-target_compile_definitions(Glew
-  PUBLIC
-    GLEW_STATIC
-)
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME} ARG_MANUAL_SOURCE_FILES)
 
-target_sources(Glew
+target_sources(${PROJECT_NAME}
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/glew.c
 )
 
+target_compile_definitions(${PROJECT_NAME}
+  PUBLIC
+    GLEW_STATIC
+)
 target_include_directories(Glew
   PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
 )
-
-set_target_properties( Glew PROPERTIES FOLDER "External/Glew" )

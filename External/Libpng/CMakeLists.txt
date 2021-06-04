@@ -1,40 +1,17 @@
-add_library(Libpng)
+PlasmaCmakeInit()
 
-plasma_setup_library(Libpng ${CMAKE_CURRENT_LIST_DIR} FALSE)
+# Get the name of this folder as the project name
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
-target_sources(Libpng
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/png.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/png.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngconf.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngdebug.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngerror.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngget.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pnginfo.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngmem.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngpread.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngpriv.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngread.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngrio.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngrtran.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngrutil.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngset.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngstruct.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngtrans.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwio.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwrite.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwtran.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwutil.c
-)
+PlasmaCreateTarget(LIBRARY ${PROJECT_NAME})
 
-plasma_target_includes(Libpng
+
+target_include_directories(${PROJECT_NAME}
   PUBLIC
     ZLib
 )
 
-target_include_directories(Libpng
+target_include_directories(${PROJECT_NAME}
   PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/Repo/
 )
-
-set_target_properties( Libpng PROPERTIES FOLDER "External/Libpng" )
