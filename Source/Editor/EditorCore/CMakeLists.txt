@@ -280,6 +280,8 @@ target_sources(EditorCore
     ${CMAKE_CURRENT_LIST_DIR}/VariantEditor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WatchView.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WatchView.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/TestGraph.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/TestGraph.hpp
 )
 
 plasma_target_includes(EditorCore

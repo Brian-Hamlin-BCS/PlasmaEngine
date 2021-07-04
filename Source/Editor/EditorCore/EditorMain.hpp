@@ -31,6 +31,7 @@ public:
   void ShowChat(CommandEvent* event);
   void ShowObjects(CommandEvent* event);
   void ShowAnimator(CommandEvent* event);
+  void ShowTestGraph(CommandEvent* event);
   void ShowHotKeyEditor(CommandEvent* event);
   void ShowOperationHistroy(CommandEvent* event);
   void ShowBroadPhaseTracker(CommandEvent* event);

@@ -120,6 +120,8 @@ public:
 #include "ResourceEditors.hpp"
 #include "HeightMapDebugging.hpp"
 
+
+
 // Tools
 #include "Tool.hpp"
 #include "Tools.hpp"
@@ -168,6 +170,8 @@ public:
 #include "UiLegacyToolTip.hpp"
 #include "PreviewWidgets.hpp"
 #include "RenderGroupHierarchies.hpp"
+
+#include "TestGraph.hpp"
 
 // Animator
 #include "AnimationEditorData.hpp"

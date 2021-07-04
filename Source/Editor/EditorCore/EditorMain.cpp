@@ -352,6 +352,12 @@ void EditorMain::ShowAnimator(CommandEvent* event)
   widget->TakeFocus();
 }
 
+void EditorMain::ShowTestGraph(CommandEvent* event)
+{
+    Widget* widget = ShowWindow("TestGraph");
+    widget->TakeFocus();
+}
+
 void EditorMain::ShowHotKeyEditor(CommandEvent* event)
 {
   // Widget* widget = ShowWindow("CommandListViewer");
@@ -1024,6 +1030,7 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     BindCommand("Commands", ShowHotKeyEditor);
     BindCommand("OperationHistory", ShowOperationHistroy);
     BindCommand("Animator", ShowAnimator);
+    BindCommand("ShowTestGraph", ShowTestGraph);
     BindCommand("FindNext", ShowFindNext);
     BindCommand("FindAll", ShowFindAll);
     BindCommand("ReplaceNext", ShowReplaceNext);
@@ -1204,6 +1211,15 @@ void CreateEditor(OsWindow* mainWindow, StringParam projectFile, StringParam new
     animator->SetSize(Pixels(500, 95));
     animator->SetMinSize(Pixels(300, 200));
     editorMain->AddManagedWidget(animator, DockArea::Bottom, false);
+  }
+
+  {
+    TestNodeGraph* nodeGraph = new TestNodeGraph(editorMain);
+    nodeGraph->SetName("TestGraph");
+    nodeGraph->SetHideOnClose(true);
+    nodeGraph->SetSize(Pixels(800, 600));
+    editorMain->AddManagedWidget(nodeGraph, DockArea::Floating, false);
+
   }
 
   // This sets the size of the editor to the correct full size of the screen

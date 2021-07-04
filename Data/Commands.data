@@ -441,6 +441,16 @@ Commands commands =
 		bool ReadOnly = true,
 	},
 
+		Command =
+	{
+		string Name = "ShowTestGraph",
+		string Description = "Show the Test Graph Window",
+		string IconName = "Animator",
+		string Tags = "Windows",
+		bool DevOnly = false,
+		bool ReadOnly = true,
+	},
+
 	Command =
 	{
 		string Name = "FindNext",
