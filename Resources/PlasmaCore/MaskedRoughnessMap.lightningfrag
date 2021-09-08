@@ -5,6 +5,7 @@ struct MaskedRoughnessMap
 {
     [FragmentInput][StageInput] var Uv : Real2;
     [Input] var ColorMaskMap : SampledImage2d;
+    [Input] var NoiseMaskMap : SampledImage2d;
     [Input] var RedChannel : SampledImage2d;
     [Input] var RoughnessOffsetRed : Real;
     [Input] var GreenChannel : SampledImage2d;
@@ -13,12 +14,19 @@ struct MaskedRoughnessMap
     [Input] var RoughnessOffsetBlue : Real;
     [Input] var AlphaChannel : SampledImage2d;
     [Input] var UseAlpha : Boolean = false;
+    [Input] var NoiseThreshold : Real = 0;
     [FragmentInput][StageInput][Output] var Roughness : Real = 1.0;
     [FragmentInput] var UvScale : Real2 = Real2(1,1);
 
     function Main()
     {
         var colorMask = this.ColorMaskMap.Sample(this.Uv / this.UvScale);
+        var threshold = 0.1 - this.NoiseThreshold;
+        if (Math.Lerp(colorMask.Z, 1, 1.0-this.NoiseMaskMap.Sample(this.Uv *(Real2(2,2) + this.UvScale)).X) < 1.0-threshold)
+        {
+          colorMask.Z = Math.Lerp(colorMask.Z, 0, 1.0-this.NoiseMaskMap.Sample(this.Uv * (Real2(2,2) + this.UvScale)).X) * this.ColorMaskMap.Sample(this.Uv / this.UvScale).Z;
+        }
+        colorMask = Math.Saturate(colorMask);
         var roughness = this.Roughness;
         roughness = Math.Lerp(roughness, this.RedChannel.Sample(this.Uv).X + this.RoughnessOffsetRed, colorMask.X);
         roughness = Math.Lerp(roughness, this.GreenChannel.Sample(this.Uv).X + this.RoughnessOffsetGreen, colorMask.Y);

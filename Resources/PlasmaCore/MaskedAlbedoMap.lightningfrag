@@ -5,17 +5,25 @@ struct MaskedAlbedoMap
 {
     [FragmentInput][StageInput] var Uv : Real2;
     [Input] var ColorMaskMap : SampledImage2d;
+    [Input] var NoiseMaskMap : SampledImage2d;
     [Input] var RedChannel : SampledImage2d;
     [Input] var GreenChannel : SampledImage2d;
     [Input] var BlueChannel : SampledImage2d;
     [Input] var AlphaChannel : SampledImage2d;
     [Input] var UseAlpha : Boolean = false;
+    [Input] var NoiseThreshold : Real = 0;
     [FragmentInput][StageInput][Output] var Albedo : Real3 = Real3(0,0,0);
     [FragmentInput] var UvScale : Real2 = Real2(1,1);
 
     function Main()
     {
         var colorMask = this.ColorMaskMap.Sample(this.Uv / this.UvScale);
+        var threshold = 0.1 - this.NoiseThreshold;
+        if (Math.Lerp(colorMask.Z, 1, 1.0-this.NoiseMaskMap.Sample(this.Uv *(Real2(2,2) + this.UvScale)).X) < 1.0-threshold)
+        {
+          colorMask.Z = Math.Lerp(colorMask.Z, 0, 1.0-this.NoiseMaskMap.Sample(this.Uv * (Real2(2,2) + this.UvScale)).X) * this.ColorMaskMap.Sample(this.Uv / this.UvScale).Z;
+        }
+        colorMask = Math.Saturate(colorMask);
         var albedo = this.Albedo;
         albedo = Math.Lerp(albedo, this.RedChannel.Sample(this.Uv).XYZ, colorMask.X);
         albedo = Math.Lerp(albedo, this.GreenChannel.Sample(this.Uv).XYZ, colorMask.Y);

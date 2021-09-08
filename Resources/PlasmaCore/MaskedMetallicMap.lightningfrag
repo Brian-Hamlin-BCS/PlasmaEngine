@@ -3,12 +3,14 @@ struct MaskedMetallicMap
 {
     [FragmentInput][StageInput] var Uv : Real2;
     [Input] var MetallicMaskMap : SampledImage2d;
+    [Input] var NoiseMaskMap : SampledImage2d;
     [Input] var RedChannel : SampledImage2d;
     [Input] var MetallicOffsetRed : Real = 0.0;
     [Input] var GreenChannel : SampledImage2d;
     [Input] var MetallicOffsetGreen : Real = 0.0;
     [Input] var BlueChannel : SampledImage2d;
     [Input] var MetallicOffsetBlue : Real = 0.0;
+    [Input] var NoiseThreshold : Real = 0;
     
     [FragmentInput] var UvScale : Real2 = Real2(1,1);
 
@@ -17,10 +19,17 @@ struct MaskedMetallicMap
     function Main()
     {
         var metallicMask = this.MetallicMaskMap.Sample(this.Uv / this.UvScale);
+        var threshold = 0.1 - this.NoiseThreshold;
+        if (Math.Lerp(metallicMask.Z, 1, 1.0-this.NoiseMaskMap.Sample(this.Uv*(Real2(2,2) + this.UvScale)).X) < 1.0-threshold)
+        {
+          metallicMask.Z = Math.Lerp(metallicMask.Z, 0, 1.0-this.NoiseMaskMap.Sample(this.Uv*(Real2(2,2) + this.UvScale)).X) * this.MetallicMaskMap.Sample(this.Uv / this.UvScale).Z;
+        }
+        metallicMask = Math.Saturate(metallicMask);
         var metallic = this.Metallic;
         metallic = Math.Lerp(metallic, this.RedChannel.Sample(this.Uv).X + this.MetallicOffsetRed, metallicMask.X);
         metallic = Math.Lerp(metallic, this.GreenChannel.Sample(this.Uv).X + this.MetallicOffsetGreen, metallicMask.Y);
         metallic = Math.Lerp(metallic, this.BlueChannel.Sample(this.Uv).X + this.MetallicOffsetBlue, metallicMask.Z);
+        
         this.Metallic = metallic;
     }
 }

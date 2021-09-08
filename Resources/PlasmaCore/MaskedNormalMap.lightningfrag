@@ -6,6 +6,7 @@ struct MaskedNormalMap
     [FragmentInput][StageInput] var Uv : Real2;
     [FragmentInput] var UvScale : Real2 = Real2(1,1);
     [Input] var NormalMaskMap : SampledImage2d;
+    [Input] var NoiseMaskMap : SampledImage2d;
     [Input] var BlendWithBaseNormal : Boolean = false;
     [Input] var NormalR : SampledImage2d;
     [Input] var NormalRValue : Real = 1.0;
@@ -15,6 +16,7 @@ struct MaskedNormalMap
     [Input] var NormalBValue : Real = 1.0;
     [Input] var NormalA : SampledImage2d;
     [Input] var NormalAValue : Real = 1.0;
+    [Input] var NoiseThreshold : Real = 0;
 
     [FragmentInput][StageInput][Output] var ViewNormal : Real3;
     [FragmentInput("ViewNormalMesh")][StageInput("ViewNormal")] var MeshNormal : Real3;
@@ -35,6 +37,12 @@ struct MaskedNormalMap
         var ySign = Math.Lerp(-1.0, 1.0, this.GreenDown as Real);
 
         var colorMask = this.NormalMaskMap.Sample(this.Uv / this.UvScale);
+        var threshold = 0.1 - this.NoiseThreshold;
+        if (Math.Lerp(colorMask.Z, 1, 1.0-this.NoiseMaskMap.Sample(this.Uv*(Real2(2,2) + this.UvScale)).X) < 1.0-threshold)
+        {
+          colorMask.Z = Math.Lerp(colorMask.Z, 0, 1.0-this.NoiseMaskMap.Sample(this.Uv*(Real2(2,2) + this.UvScale)).X) * this.NormalMaskMap.Sample(this.Uv / this.UvScale).Z;
+        }
+        colorMask = Math.Saturate(colorMask);
 
         var normal = Math.Normalize(this.ViewNormal);
         var meshNormal = this.MeshNormal;
